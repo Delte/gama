@@ -1,0 +1,80 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-09-25 11:47:10.220419",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "main_folder",
+  "column_break_ayjg9",
+  "project_folder",
+  "template_folder",
+  "doctype_settings_section",
+  "doctype_details"
+ ],
+ "fields": [
+  {
+   "fieldname": "main_folder",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Main Folder",
+   "options": "Drive Entity",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_ayjg9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "project_folder",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Project Folder",
+   "options": "Drive Entity",
+   "reqd": 1
+  },
+  {
+   "fieldname": "template_folder",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Template Folder",
+   "options": "Drive Entity",
+   "reqd": 1
+  },
+  {
+   "fieldname": "doctype_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Doctype Settings"
+  },
+  {
+   "fieldname": "doctype_details",
+   "fieldtype": "Table",
+   "options": "Gama Drive Settings Doctype Details"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2023-09-25 12:05:07.054330",
+ "modified_by": "Administrator",
+ "module": "Gama Settings",
+ "name": "Gama Drive Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
