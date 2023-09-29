@@ -66,8 +66,6 @@ def create(doc_type,name):
 	if drive_entity is None:
 		frappe.msgprint('Bu Form için klasör tanımlanmamış! Lütfen Sistem Yöneticisiyle iletişime geçin')
 	
-
-
 def create_year_folder(name, parent_entity):	#Create year Folder, will be seperate year (YYYY) from standart ERPNext naming series eg. CRM-OPTY-.YYYY.-#####
 	name=name[-10:]
 	name=name[:4]
@@ -104,7 +102,6 @@ def create_folder(name, parent_entity):
 		new_drive_entity.is_active = True
 		new_drive_entity.color = "#98A1A9"
 		new_drive_entity.insert(ignore_permissions=True)
-		copy_folder_permission(new_drive_entity.name, parent_entity)
 		new_drive_entity = new_drive_entity.name
 	return new_drive_entity
 
@@ -125,7 +122,6 @@ def copy_folder(target_entity, source_entity):
 		drive_entity_sub = copy_folder(new_drive_entity, sub_entity.name)
 
 	return drive_entity_sub
-
 
 def clear_permission(new_drive_entity):
 	delete_permission = frappe.db.get_all('DocShare',
@@ -157,7 +153,7 @@ def copy_folder_permission(new_drive_entity, parent_entity):
 		doc.read = source_share.read
 		doc.write = source_share.write
 		doc.share = source_share.share
-		doc.notify_by_email= source_share.notify_by_email	
+		doc.notify_by_email= False
 		doc.insert(ignore_permissions=True)
 
 @frappe.whitelist()
