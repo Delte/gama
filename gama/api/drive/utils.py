@@ -141,7 +141,7 @@ def copy_folder_permission(new_drive_entity, parent_entity):
 					     'share_doctype': "Drive Entity",
 						 'share_name': parent_entity
 						 },
-						 fields=['name', 'user', 'read', 'write', 'share', 'notify_by_email'],
+						 fields=['name', 'user', 'read', 'write'],
 						 page_length=9999,
 						 as_list=False
 						 )
@@ -152,8 +152,8 @@ def copy_folder_permission(new_drive_entity, parent_entity):
 		doc.share_name = new_drive_entity
 		doc.read = source_share.read
 		doc.write = source_share.write
-		doc.share = source_share.share
-		doc.notify_by_email= False
+		doc.share = 0
+		doc.notify_by_email= 0
 		doc.insert(ignore_permissions=True)
 
 @frappe.whitelist()
