@@ -100,7 +100,7 @@ def create_folder(name, parent_entity):
 		new_drive_entity.old_parent = parent_entity
 		new_drive_entity.parent_drive_entity = parent_entity
 		new_drive_entity.is_active = True
-		new_drive_entity.color = "#98A1A9"
+		new_drive_entity.color = "#525252"
 		new_drive_entity.insert(ignore_permissions=True)
 		new_drive_entity = new_drive_entity.name
 	return new_drive_entity
