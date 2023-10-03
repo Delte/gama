@@ -14,9 +14,14 @@ def create(doc_type,name):
 
 		if doc_type == row_doctype_details.doc_type:	#check if doctype present on list at drive settings
 			if row_doctype_details.project == 1:
-				drive_entity = create_year_folder(data.project, drive_settings.project_folder)
-				drive_entity = create_folder(data.project, drive_entity)
-				copy_folder(drive_entity,drive_settings.template_folder)
+				if row_doctype_details.doc_type == 'Project':
+					drive_entity = create_year_folder(data.name, drive_settings.project_folder)
+					drive_entity = create_folder(data.name, drive_entity)
+					copy_folder(drive_entity,drive_settings.template_folder)
+				else :
+					drive_entity = create_year_folder(data.project, drive_settings.project_folder)
+					drive_entity = create_folder(data.project, drive_entity)
+					copy_folder(drive_entity,drive_settings.template_folder)
 
 			else:
 				drive_entity = row_doctype_details.doc_type_drive_entity
@@ -168,3 +173,4 @@ def give_folder_permission():
 	doc.share = 0
 	doc.notify_by_email= 0
 	doc.insert()
+	

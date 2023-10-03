@@ -12,7 +12,10 @@
   "project_folder",
   "template_folder",
   "doctype_settings_section",
-  "doctype_details"
+  "doctype_details",
+  "project_section",
+  "project"
+
  ],
  "fields": [
   {
@@ -52,7 +55,26 @@
    "fieldname": "doctype_details",
    "fieldtype": "Table",
    "options": "Gama Drive Settings Doctype Details"
-  }
+  },
+  {
+    "fieldname": "project_section",
+    "fieldtype": "Section Break",
+    "label": "Project"
+   },
+   {
+    "fieldname": "project",
+    "fieldtype": "Link",
+    "in_list_view": 1,
+    "label": "Project",
+    "options": "Project",
+    "reqd": 0
+   },
+   {
+    "fieldname": "add_folders",
+    "fieldtype": "Button",
+    "in_list_view": 1,
+    "label": "Button"
+   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
