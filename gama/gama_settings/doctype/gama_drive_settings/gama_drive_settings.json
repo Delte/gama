@@ -15,7 +15,9 @@
   "doctype_details",
   "project_section",
   "project",
-  "addcreate"
+  "column_break_vuiso",
+  "addcreate",
+  "deleteremove"
  ],
  "fields": [
   {
@@ -71,12 +73,21 @@
    "fieldname": "addcreate",
    "fieldtype": "Button",
    "label": "add/create"
+  },
+  {
+   "fieldname": "column_break_vuiso",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "deleteremove",
+   "fieldtype": "Button",
+   "label": "delete/remove"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-10-04 09:26:32.562358",
+ "modified": "2023-10-04 15:44:14.605699",
  "modified_by": "Administrator",
  "module": "Gama Settings",
  "name": "Gama Drive Settings",

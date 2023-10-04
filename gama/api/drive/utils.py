@@ -90,8 +90,11 @@ def check_folder_entity(name, parent_entity):	#Check if given name is exist unde
 		page_length=1,
 		as_list=False
 	)
+	frappe.msgprint (f'{check_entity}')
 	if check_entity:
 		present_entity = check_entity[0]['name']
+
+	frappe.msgprint (f'{present_entity}')
 	return present_entity	#If it exists returns Folder Entity
 
 def create_folder(name, parent_entity):
@@ -162,7 +165,7 @@ def copy_folder_permission(new_drive_entity, parent_entity):
 		doc.insert(ignore_permissions=True)
 
 @frappe.whitelist()
-def project(project):
+def addcreate(project):
 	frappe.msgprint(f'{project}')
 	drive_settings = frappe.get_doc("Gama Drive Settings")
 	drive_entity = None
@@ -206,6 +209,7 @@ def project(project):
 						 },
 						 fields=['name'],
 						 page_length=9999,
+						 as_list=False
 						 )	
 	for quotation_name in quotation:
 		frappe.msgprint(f'{quotation_name.name}')
@@ -218,6 +222,7 @@ def project(project):
 						 },
 						 fields=['name'],
 						 page_length=9999,
+						 as_list=False
 						 )
 	for salesorder_name in salesorder:
 		frappe.msgprint(f'{salesorder_name.name}')
@@ -230,6 +235,7 @@ def project(project):
 						 },
 						 fields=['name'],
 						 page_length=9999,
+						 as_list=False
 						 )
 	for timesheet_name in timesheet:
 		frappe.msgprint(f'{timesheet_name.name}')
@@ -242,6 +248,7 @@ def project(project):
 						 },
 						 fields=['name'],
 						 page_length=9999,
+						 as_list=False
 						 )
 	for issue_name in issue:
 		frappe.msgprint(f'{issue_name.name}')
@@ -254,6 +261,7 @@ def project(project):
 						 },
 						 fields=['name'],
 						 page_length=9999,
+						 as_list=False
 						 )
 	for deliverynote_name in deliverynote:
 		frappe.msgprint(f'{deliverynote_name.name}')
@@ -266,9 +274,122 @@ def project(project):
 						 },
 						 fields=['name'],
 						 page_length=9999,
+						 as_list=False
 						 )
 	for installationnote_name in installationnote:
 		frappe.msgprint(f'{installationnote_name.name}')
 		frappe.db.set_value ('Timesheet', installationnote_name, 'custom_drive_entity', drive_entity, update_modified=False)
 
+@frappe.whitelist()
+def deleteremove(project):
+	drive_entity = frappe.get_value ('Project', project, 'custom_drive_entity')
+	frappe.msgprint(f'drive_entity:{drive_entity}')
+
+	#Project
+	frappe.db.set_value ('Project', project, 'custom_drive_entity', '', update_modified=False)
+
+	#Opportunity
+	opportunity = frappe.db.get_all('Opportunity',
+				     filters={
+					     'project': project,
+						 },
+						 fields=['name'],
+						 page_length=9999,
+						 as_list=False
+						 )
+	for opportunity_name in opportunity:
+		frappe.msgprint(f'{opportunity_name.name}')
+		frappe.db.set_value ('Opportunity', opportunity_name, 'custom_drive_entity', '', update_modified=False)
+
+	#Tasks
+	task = frappe.db.get_all('Task',
+				     filters={
+					     'project': project,
+						 },
+						 fields=['name'],
+						 page_length=9999,
+						 as_list=False
+						 )
+	for task_name in task:
+		frappe.msgprint(f'{task_name.name}')
+		frappe.db.set_value ('Task', task_name, 'custom_drive_entity', '', update_modified=False)
+
+	#Quotation
+	quotation = frappe.db.get_all('Quotation',
+				     filters={
+					     'project': project,
+						 },
+						 fields=['name'],
+						 page_length=9999,
+						 as_list=False
+						 )	
+	for quotation_name in quotation:
+		frappe.msgprint(f'{quotation_name.name}')
+		frappe.db.set_value ('Quotation', quotation_name, 'custom_drive_entity', '', update_modified=False)
+
+	#Sales Order
+	salesorder = frappe.db.get_all('Sales Order',
+				     filters={
+					     'project': project,
+						 },
+						 fields=['name'],
+						 page_length=9999,
+						 as_list=False
+						 )
+	for salesorder_name in salesorder:
+		frappe.msgprint(f'{salesorder_name.name}')
+		frappe.db.set_value ('Sales Order', salesorder_name, 'custom_drive_entity', '', update_modified=False)
 	
+	#Timesheet
+	timesheet = frappe.db.get_all('Timesheet',
+				     filters={
+					     'project': project,
+						 },
+						 fields=['name'],
+						 page_length=9999,
+						 as_list=False
+						 )
+	for timesheet_name in timesheet:
+		frappe.msgprint(f'{timesheet_name.name}')
+		frappe.db.set_value ('Timesheet', timesheet_name, 'custom_drive_entity', '', update_modified=False)
+
+	#Issue
+	issue = frappe.db.get_all('Issue',
+				     filters={
+					     'project_new': project,
+						 },
+						 fields=['name'],
+						 page_length=9999,
+						 as_list=False
+						 )
+	for issue_name in issue:
+		frappe.msgprint(f'{issue_name.name}')
+		frappe.db.set_value ('Timesheet', issue_name, 'custom_drive_entity', '', update_modified=False)
+
+	#Delivery Note
+	deliverynote = frappe.db.get_all('Delivery Note',
+				     filters={
+					     'project': project,
+						 },
+						 fields=['name'],
+						 page_length=9999,
+						 as_list=False
+						 )
+	for deliverynote_name in deliverynote:
+		frappe.msgprint(f'{deliverynote_name.name}')
+		frappe.db.set_value ('Timesheet', deliverynote_name, 'custom_drive_entity', '', update_modified=False)
+	
+	#Installation Note
+	installationnote = frappe.db.get_all('Installation Note',
+				     filters={
+					     'project': project,
+						 },
+						 fields=['name'],
+						 page_length=9999,
+						 as_list=False
+						 )
+	for installationnote_name in installationnote:
+		frappe.msgprint(f'{installationnote_name.name}')
+		frappe.db.set_value ('Timesheet', installationnote_name, 'custom_drive_entity', '', update_modified=False)
+
+	frappe.delete_doc("Drive Entity", drive_entity, ignore_permissions=True)
