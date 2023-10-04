@@ -14,8 +14,8 @@
   "doctype_settings_section",
   "doctype_details",
   "project_section",
-  "project"
-
+  "project",
+  "addcreate"
  ],
  "fields": [
   {
@@ -57,29 +57,26 @@
    "options": "Gama Drive Settings Doctype Details"
   },
   {
-    "fieldname": "project_section",
-    "fieldtype": "Section Break",
-    "label": "Project"
-   },
-   {
-    "fieldname": "project",
-    "fieldtype": "Link",
-    "in_list_view": 1,
-    "label": "Project",
-    "options": "Project",
-    "reqd": 0
-   },
-   {
-    "fieldname": "add_folders",
-    "fieldtype": "Button",
-    "in_list_view": 1,
-    "label": "Button"
-   }
+   "fieldname": "project_section",
+   "fieldtype": "Section Break",
+   "label": "Create/Edit Project Folder"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project"
+  },
+  {
+   "fieldname": "addcreate",
+   "fieldtype": "Button",
+   "label": "add/create"
+  }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-09-25 12:05:07.054330",
+ "modified": "2023-10-04 09:26:32.562358",
  "modified_by": "Administrator",
  "module": "Gama Settings",
  "name": "Gama Drive Settings",
