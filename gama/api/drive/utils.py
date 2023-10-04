@@ -206,6 +206,7 @@ def project(project):
 						 },
 						 fields=['name'],
 						 page_length=9999,
+						 as_list=False
 						 )	
 	for quotation_name in quotation:
 		frappe.msgprint(f'{quotation_name.name}')
@@ -218,6 +219,7 @@ def project(project):
 						 },
 						 fields=['name'],
 						 page_length=9999,
+						 as_list=False
 						 )
 	for salesorder_name in salesorder:
 		frappe.msgprint(f'{salesorder_name.name}')
@@ -230,6 +232,7 @@ def project(project):
 						 },
 						 fields=['name'],
 						 page_length=9999,
+						 as_list=False
 						 )
 	for timesheet_name in timesheet:
 		frappe.msgprint(f'{timesheet_name.name}')
@@ -242,6 +245,7 @@ def project(project):
 						 },
 						 fields=['name'],
 						 page_length=9999,
+						 as_list=False
 						 )
 	for issue_name in issue:
 		frappe.msgprint(f'{issue_name.name}')
@@ -254,6 +258,7 @@ def project(project):
 						 },
 						 fields=['name'],
 						 page_length=9999,
+						 as_list=False
 						 )
 	for deliverynote_name in deliverynote:
 		frappe.msgprint(f'{deliverynote_name.name}')
@@ -266,6 +271,7 @@ def project(project):
 						 },
 						 fields=['name'],
 						 page_length=9999,
+						 as_list=False
 						 )
 	for installationnote_name in installationnote:
 		frappe.msgprint(f'{installationnote_name.name}')
