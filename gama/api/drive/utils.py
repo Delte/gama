@@ -162,19 +162,6 @@ def copy_folder_permission(new_drive_entity, parent_entity):
 		doc.insert(ignore_permissions=True)
 
 @frappe.whitelist()
-<<<<<<< HEAD
-def give_folder_permission():
-	drive_settings = frappe.get_doc("Drive Settings")
-	doc = frappe.new_doc('DocShare')
-	doc.user = drive_settings.user_name
-	doc.share_doctype = 'Drive Entity'
-	doc.share_name = drive_settings.folder_entity
-	doc.read = 1
-	doc.write = 0
-	doc.share = 0
-	doc.notify_by_email= 0
-	doc.insert()
-=======
 def project(project):
 	frappe.msgprint(f'{project}')
 	drive_settings = frappe.get_doc("Gama Drive Settings")
@@ -284,5 +271,4 @@ def project(project):
 		frappe.msgprint(f'{installationnote_name.name}')
 		frappe.db.set_value ('Timesheet', installationnote_name, 'custom_drive_entity', drive_entity, update_modified=False)
 
->>>>>>> a336f9f (added create/edit project field)
 	
