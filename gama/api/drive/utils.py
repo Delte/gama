@@ -249,7 +249,7 @@ def addcreate(project):
 						 )
 	for issue_name in issue:
 		frappe.msgprint(f'{issue_name.name}')
-		frappe.db.set_value ('Timesheet', issue_name, 'custom_drive_entity', drive_entity, update_modified=False)
+		frappe.db.set_value ('Issue', issue_name, 'custom_drive_entity', drive_entity, update_modified=False)
 
 	#Delivery Note
 	deliverynote = frappe.db.get_all('Delivery Note',
@@ -262,7 +262,7 @@ def addcreate(project):
 						 )
 	for deliverynote_name in deliverynote:
 		frappe.msgprint(f'{deliverynote_name.name}')
-		frappe.db.set_value ('Timesheet', deliverynote_name, 'custom_drive_entity', drive_entity, update_modified=False)
+		frappe.db.set_value ('Delivery Note', deliverynote_name, 'custom_drive_entity', drive_entity, update_modified=False)
 	
 	#Installation Note
 	installationnote = frappe.db.get_all('Installation Note',
@@ -275,7 +275,7 @@ def addcreate(project):
 						 )
 	for installationnote_name in installationnote:
 		frappe.msgprint(f'{installationnote_name.name}')
-		frappe.db.set_value ('Timesheet', installationnote_name, 'custom_drive_entity', drive_entity, update_modified=False)
+		frappe.db.set_value ('Installation Note', installationnote_name, 'custom_drive_entity', drive_entity, update_modified=False)
 
 @frappe.whitelist()
 def deleteremove(project):
@@ -361,7 +361,7 @@ def deleteremove(project):
 						 )
 	for issue_name in issue:
 		frappe.msgprint(f'{issue_name.name}')
-		frappe.db.set_value ('Timesheet', issue_name, 'custom_drive_entity', '', update_modified=False)
+		frappe.db.set_value ('Issue', issue_name, 'custom_drive_entity', '', update_modified=False)
 
 	#Delivery Note
 	deliverynote = frappe.db.get_all('Delivery Note',
@@ -374,7 +374,7 @@ def deleteremove(project):
 						 )
 	for deliverynote_name in deliverynote:
 		frappe.msgprint(f'{deliverynote_name.name}')
-		frappe.db.set_value ('Timesheet', deliverynote_name, 'custom_drive_entity', '', update_modified=False)
+		frappe.db.set_value ('Delivery Note', deliverynote_name, 'custom_drive_entity', '', update_modified=False)
 	
 	#Installation Note
 	installationnote = frappe.db.get_all('Installation Note',
@@ -387,6 +387,6 @@ def deleteremove(project):
 						 )
 	for installationnote_name in installationnote:
 		frappe.msgprint(f'{installationnote_name.name}')
-		frappe.db.set_value ('Timesheet', installationnote_name, 'custom_drive_entity', '', update_modified=False)
+		frappe.db.set_value ('Installation Note', installationnote_name, 'custom_drive_entity', '', update_modified=False)
 
 	frappe.delete_doc("Drive Entity", drive_entity, ignore_permissions=True)
