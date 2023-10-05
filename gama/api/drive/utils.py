@@ -90,11 +90,8 @@ def check_folder_entity(name, parent_entity):	#Check if given name is exist unde
 		page_length=1,
 		as_list=False
 	)
-	frappe.msgprint (f'{check_entity}')
 	if check_entity:
 		present_entity = check_entity[0]['name']
-
-	frappe.msgprint (f'{present_entity}')
 	return present_entity	#If it exists returns Folder Entity
 
 def create_folder(name, parent_entity):
