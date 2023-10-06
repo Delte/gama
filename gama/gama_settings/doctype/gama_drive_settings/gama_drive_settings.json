@@ -13,11 +13,15 @@
   "template_folder",
   "doctype_settings_section",
   "doctype_details",
-  "project_section",
-  "project",
+  "section_break_fluzs",
+  "project_folder_create",
+  "create",
   "column_break_vuiso",
-  "addcreate",
-  "deleteremove"
+  "project_folder_remove",
+  "remove",
+  "user_permission_section",
+  "user",
+  "permission"
  ],
  "fields": [
   {
@@ -59,35 +63,56 @@
    "options": "Gama Drive Settings Doctype Details"
   },
   {
-   "fieldname": "project_section",
-   "fieldtype": "Section Break",
-   "label": "Create/Edit Project Folder"
+   "fieldname": "column_break_vuiso",
+   "fieldtype": "Column Break"
   },
   {
-   "fieldname": "project",
+   "fieldname": "user_permission_section",
+   "fieldtype": "Section Break",
+   "label": "User Permission"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User"
+  },
+  {
+   "fieldname": "permission",
+   "fieldtype": "Button",
+   "label": "Permission"
+  },
+  {
+   "fieldname": "create",
+   "fieldtype": "Button",
+   "label": "Create"
+  },
+  {
+   "fieldname": "remove",
+   "fieldtype": "Button",
+   "label": "Remove"
+  },
+  {
+   "fieldname": "project_folder_create",
    "fieldtype": "Link",
    "label": "Project",
    "options": "Project"
   },
   {
-   "fieldname": "addcreate",
-   "fieldtype": "Button",
-   "label": "add/create"
+   "fieldname": "project_folder_remove",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project"
   },
   {
-   "fieldname": "column_break_vuiso",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "deleteremove",
-   "fieldtype": "Button",
-   "label": "delete/remove"
+   "fieldname": "section_break_fluzs",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-10-04 15:44:14.605699",
+ "modified": "2023-10-06 10:24:00.424759",
  "modified_by": "Administrator",
  "module": "Gama Settings",
  "name": "Gama Drive Settings",
