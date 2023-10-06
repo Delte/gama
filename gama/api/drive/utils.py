@@ -1,392 +1,152 @@
 from __future__ import unicode_literals
-import frappe, json, uuid, mimetypes, os
-from frappe import msgprint, _
-from frappe.model.document import Document
-from frappe.utils import get_site_name
+import frappe
+import uuid
+
+drive_settings = frappe.get_doc("Gama Drive Settings")
 
 @frappe.whitelist()
-def create(doc_type,name):
-	data = frappe.get_doc(doc_type,name)
-	drive_settings = frappe.get_doc("Gama Drive Settings")
-	drive_entity = None
+def create(doc_type, name):
+    data = frappe.get_doc(doc_type, name)
+    drive_entity = None
+
+    for doctype_details in drive_settings.doctype_details:
+        if doc_type == doctype_details.doc_type:
+            if doctype_details.project == 1:
+                project = data.name if doc_type == 'Project' else data.project
+                drive_entity = create_project_folder(project)
+            else:
+                drive_entity = doctype_details.doc_type_drive_entity
+
+            for folder_field in ["folder_name_1", "folder_name_2", "folder_name_3", "folder_name_4"]:
+                folder_name = getattr(doctype_details, folder_field)
+                if folder_name:
+                    drive_entity_present = check_folder_entity(
+                        frappe.render_template(folder_name, context={"doc": data}, is_path=False),
+                        drive_entity,
+                    )
+                    if drive_entity_present is None:
+                        if folder_name == '.YYYY.':
+                            folder_name_template = frappe.render_template(
+                                doctype_details.yearly_folder_based_on, context={"doc": data}, is_path=False
+                            )
+                            drive_entity_present = create_year_folder(folder_name_template, drive_entity)
+                        else:
+                            folder_name_template = frappe.render_template(
+                                folder_name, context={"doc": data}, is_path=False
+                            )
+                            drive_entity_present = create_folder(folder_name_template, drive_entity)
+                    drive_entity = drive_entity_present
+
+            return drive_entity
+
+    frappe.msgprint('Bu Form için klasör tanımlanmamış! Lütfen Sistem Yöneticisiyle iletişime geçin')
+
+def create_year_folder(name, parent_entity):
+    name = name[-10:][:4]
+    return create_folder(name, parent_entity)
 	
-	for row_doctype_details in drive_settings.doctype_details:
+def create_project_folder(name):
+    drive_entity = create_year_folder(name, drive_settings.project_folder)
+    drive_entity = create_folder(name, drive_entity)
+    copy_folder(drive_entity, drive_settings.template_folder)
+    return drive_entity
 
-		if doc_type == row_doctype_details.doc_type:	#check if doctype present on list at drive settings
-			if row_doctype_details.project == 1:
-				if row_doctype_details.doc_type == 'Project':
-					drive_entity = create_year_folder(data.name, drive_settings.project_folder)
-					drive_entity = create_folder(data.name, drive_entity)
-					copy_folder(drive_entity,drive_settings.template_folder)
-				else :
-					drive_entity = create_year_folder(data.project, drive_settings.project_folder)
-					drive_entity = create_folder(data.project, drive_entity)
-					copy_folder(drive_entity,drive_settings.template_folder)
-
-			else:
-				drive_entity = row_doctype_details.doc_type_drive_entity
-						
-			if row_doctype_details.folder_name_1:
-				drive_entity_present = None
-				drive_entity_present = check_folder_entity(frappe.render_template(row_doctype_details.folder_name_1,context={"doc":data}, is_path=False), drive_entity)
-				if drive_entity_present is None:
-					if row_doctype_details.folder_name_1 == '.YYYY.':
-						drive_entity_present = create_year_folder(frappe.render_template(row_doctype_details.yearly_folder_based_on,context={"doc":data}, is_path=False), drive_entity)
-					else:
-						drive_entity_present = create_folder(frappe.render_template(row_doctype_details.folder_name_1,context={"doc":data}, is_path=False), drive_entity)
-				drive_entity = drive_entity_present
-				
-			if row_doctype_details.folder_name_2:
-				drive_entity_present = None
-				drive_entity_present = check_folder_entity(frappe.render_template(row_doctype_details.folder_name_2,context={"doc":data}, is_path=False), drive_entity)
-				if drive_entity_present is None:
-					if row_doctype_details.folder_name_2 == '.YYYY.':
-						drive_entity_present = create_year_folder(frappe.render_template(row_doctype_details.yearly_folder_based_on,context={"doc":data}, is_path=False), drive_entity)
-					else:
-						drive_entity_present = create_folder(frappe.render_template(row_doctype_details.folder_name_2,context={"doc":data}, is_path=False), drive_entity)
-				drive_entity = drive_entity_present
-
-			if row_doctype_details.folder_name_3:
-				drive_entity_present = None
-				drive_entity_present = check_folder_entity(frappe.render_template(row_doctype_details.folder_name_3,context={"doc":data}, is_path=False), drive_entity)
-				if drive_entity_present is None:
-					if row_doctype_details.folder_name_3 == '.YYYY.':
-						drive_entity_present = create_year_folder(frappe.render_template(row_doctype_details.yearly_folder_based_on,context={"doc":data}, is_path=False), drive_entity)
-					else:
-						drive_entity_present = create_folder(frappe.render_template(row_doctype_details.folder_name_3,context={"doc":data}, is_path=False), drive_entity)
-				drive_entity = drive_entity_present
-
-			if row_doctype_details.folder_name_4:
-				drive_entity_present = None
-				drive_entity_present = check_folder_entity(frappe.render_template(row_doctype_details.folder_name_4,context={"doc":data}, is_path=False), drive_entity)
-				if drive_entity_present is None:
-					if row_doctype_details.folder_name_4 == '.YYYY.':
-						drive_entity_present = create_year_folder(frappe.render_template(row_doctype_details.yearly_folder_based_on,context={"doc":data}, is_path=False), drive_entity)
-					else:
-						drive_entity_present = create_folder(frappe.render_template(row_doctype_details.folder_name_4,context={"doc":data}, is_path=False), drive_entity)
-				drive_entity = drive_entity_present
-
-			return drive_entity
-
-	if drive_entity is None:
-		frappe.msgprint('Bu Form için klasör tanımlanmamış! Lütfen Sistem Yöneticisiyle iletişime geçin')
-	
-def create_year_folder(name, parent_entity):	#Create year Folder, will be seperate year (YYYY) from standart ERPNext naming series eg. CRM-OPTY-.YYYY.-#####
-	name=name[-10:]
-	name=name[:4]
-	year_parent_entity = create_folder(name,parent_entity)
-	return year_parent_entity
-
-def check_folder_entity(name, parent_entity):	#Check if given name is exist under the Parent Entity ID
-	present_entity = None
-	check_entity = frappe.get_all('Drive Entity',
-		filters={
-			'parent_drive_entity': parent_entity,
-			'title': name,
-			'is_active': 1,
-			'is_group': 1
-		},
-		fields=['name'],
-		page_length=1,
-		as_list=False
-	)
-	if check_entity:
-		present_entity = check_entity[0]['name']
-	return present_entity	#If it exists returns Folder Entity
+def check_folder_entity(name, parent_entity):
+    return frappe.db.get_value('Drive Entity',{'parent_drive_entity': parent_entity, 'title': name, 'is_active': 1, 'is_group': 1},'name')
 
 def create_folder(name, parent_entity):
-	new_drive_entity: None
-	new_drive_entity = check_folder_entity(name, parent_entity)
-	if new_drive_entity is None:
-		new_drive_entity = frappe.new_doc("Drive Entity")
-		new_drive_entity.name = uuid.uuid4().hex
-		new_drive_entity.title = name
-		new_drive_entity.is_group = 1
-		new_drive_entity.old_parent = parent_entity
-		new_drive_entity.parent_drive_entity = parent_entity
-		new_drive_entity.is_active = True
-		new_drive_entity.color = "#525252"
-		new_drive_entity.insert(ignore_permissions=True)
-		new_drive_entity = new_drive_entity.name
-	return new_drive_entity
+    new_drive_entity = check_folder_entity(name, parent_entity)
+    hex_code = new_drive_entity
+    if not new_drive_entity:
+        hex_code = uuid.uuid4().hex
+        new_drive_entity = frappe.new_doc("Drive Entity")
+        new_drive_entity.name = hex_code
+        new_drive_entity.title = name
+        new_drive_entity.is_group = 1
+        new_drive_entity.old_parent = parent_entity
+        new_drive_entity.parent_drive_entity = parent_entity
+        new_drive_entity.is_active = True
+        new_drive_entity.color = "#525252"
+        new_drive_entity.insert(ignore_permissions=True)
+    return hex_code
 
 def copy_folder(target_entity, source_entity):
-	drive_entity_sub = None
-	sub_folder_entity = frappe.db.get_all('Drive Entity',
-		filters={
-			'parent_drive_entity': source_entity,
-			'is_active': 1
-		},
-		fields=['name', 'title', 'is_group'],
-		page_length=9999,
-		as_list=False
-	)
-	for sub_entity in sub_folder_entity:
-		new_drive_entity = create_folder(sub_entity.title, target_entity)
-		copy_folder_permission(new_drive_entity, sub_entity.name)
-		drive_entity_sub = copy_folder(new_drive_entity, sub_entity.name)
-
-	return drive_entity_sub
+    sub_entity = None
+    records = frappe.get_all('Drive Entity',
+        filters={
+            'parent_drive_entity': source_entity,
+            'is_active': 1,
+           'is_group': 1
+        },
+        fields=['name', 'title'],
+        page_length=9999,
+        as_list=False
+    )
+    for record in records:
+        drive_entity = create_folder(record.title, target_entity)
+        copy_folder_permission(drive_entity, record.name)
+        sub_entity = copy_folder(drive_entity, record.name)
+    return sub_entity
 
 def clear_permission(new_drive_entity):
-	delete_permission = frappe.db.get_all('DocShare',
-				       filters={
-					       'share_doctype': "Drive Entity",
-						   'share_name': new_drive_entity
-						   },
-						   fields=['name'],
-						   )
-	for old_permission in delete_permission:
-		frappe.delete_doc("DocShare", old_permission.name, ignore_permissions=True)
+    records = frappe.db.get_all('DocShare',
+        filters={
+            'share_doctype': "Drive Entity",
+            'share_name': new_drive_entity
+        },
+        fields=['name'],
+    )
+    for record in records:
+        frappe.delete_doc("DocShare", record.name, ignore_permissions=True)
 
-def copy_folder_permission(new_drive_entity, parent_entity):
-	clear_permission(new_drive_entity)
-	docshare_parent = frappe.db.get_all('DocShare',
-				     filters={
-					     'share_doctype': "Drive Entity",
-						 'share_name': parent_entity
-						 },
-						 fields=['name', 'user', 'read', 'write'],
-						 page_length=9999,
-						 as_list=False
-						 )
-	for source_share in docshare_parent:
-		doc = frappe.new_doc('DocShare')
-		doc.user = source_share.user
-		doc.share_doctype = 'Drive Entity'
-		doc.share_name = new_drive_entity
-		doc.read = source_share.read
-		doc.write = source_share.write
-		doc.share = 0
-		doc.notify_by_email= 0
-		doc.insert(ignore_permissions=True)
-
-@frappe.whitelist()
-def addcreate(project):
-	frappe.msgprint(f'{project}')
-	drive_settings = frappe.get_doc("Gama Drive Settings")
-	drive_entity = None
-	drive_entity = create_year_folder(project, drive_settings.project_folder)
-	drive_entity = create_folder(project, drive_entity)
-	copy_folder(drive_entity,drive_settings.template_folder)
-
-	#Project
-	frappe.db.set_value ('Project', project, 'custom_drive_entity', drive_entity, update_modified=False)
-
-	#Opportunity
-	opportunity = frappe.db.get_all('Opportunity',
-				     filters={
-					     'project': project,
-						 },
-						 fields=['name'],
-						 page_length=9999,
-						 as_list=False
-						 )
-	for opportunity_name in opportunity:
-		frappe.msgprint(f'{opportunity_name.name}')
-		frappe.db.set_value ('Opportunity', opportunity_name, 'custom_drive_entity', drive_entity, update_modified=False)
-
-	#Tasks
-	task = frappe.db.get_all('Task',
-				     filters={
-					     'project': project,
-						 },
-						 fields=['name'],
-						 page_length=9999,
-						 as_list=False
-						 )
-	for task_name in task:
-		frappe.msgprint(f'{task_name.name}')
-		frappe.db.set_value ('Task', task_name, 'custom_drive_entity', drive_entity, update_modified=False)
-
-	#Quotation
-	quotation = frappe.db.get_all('Quotation',
-				     filters={
-					     'project': project,
-						 },
-						 fields=['name'],
-						 page_length=9999,
-						 as_list=False
-						 )	
-	for quotation_name in quotation:
-		frappe.msgprint(f'{quotation_name.name}')
-		frappe.db.set_value ('Quotation', quotation_name, 'custom_drive_entity', drive_entity, update_modified=False)
-
-	#Sales Order
-	salesorder = frappe.db.get_all('Sales Order',
-				     filters={
-					     'project': project,
-						 },
-						 fields=['name'],
-						 page_length=9999,
-						 as_list=False
-						 )
-	for salesorder_name in salesorder:
-		frappe.msgprint(f'{salesorder_name.name}')
-		frappe.db.set_value ('Sales Order', salesorder_name, 'custom_drive_entity', drive_entity, update_modified=False)
-	
-	#Timesheet
-	timesheet = frappe.db.get_all('Timesheet',
-				     filters={
-					     'project': project,
-						 },
-						 fields=['name'],
-						 page_length=9999,
-						 as_list=False
-						 )
-	for timesheet_name in timesheet:
-		frappe.msgprint(f'{timesheet_name.name}')
-		frappe.db.set_value ('Timesheet', timesheet_name, 'custom_drive_entity', drive_entity, update_modified=False)
-
-	#Issue
-	issue = frappe.db.get_all('Issue',
-				     filters={
-					     'project_new': project,
-						 },
-						 fields=['name'],
-						 page_length=9999,
-						 as_list=False
-						 )
-	for issue_name in issue:
-		frappe.msgprint(f'{issue_name.name}')
-		frappe.db.set_value ('Issue', issue_name, 'custom_drive_entity', drive_entity, update_modified=False)
-
-	#Delivery Note
-	deliverynote = frappe.db.get_all('Delivery Note',
-				     filters={
-					     'project': project,
-						 },
-						 fields=['name'],
-						 page_length=9999,
-						 as_list=False
-						 )
-	for deliverynote_name in deliverynote:
-		frappe.msgprint(f'{deliverynote_name.name}')
-		frappe.db.set_value ('Delivery Note', deliverynote_name, 'custom_drive_entity', drive_entity, update_modified=False)
-	
-	#Installation Note
-	installationnote = frappe.db.get_all('Installation Note',
-				     filters={
-					     'project': project,
-						 },
-						 fields=['name'],
-						 page_length=9999,
-						 as_list=False
-						 )
-	for installationnote_name in installationnote:
-		frappe.msgprint(f'{installationnote_name.name}')
-		frappe.db.set_value ('Installation Note', installationnote_name, 'custom_drive_entity', drive_entity, update_modified=False)
+def copy_folder_permission(drive_entity, template_entity):
+    clear_permission(drive_entity)
+    docshare_templates = frappe.db.get_all('DocShare',
+        filters={
+            'share_doctype': "Drive Entity",
+            'share_name': template_entity
+        },
+        fields=['name', 'user', 'read', 'write'],
+        page_length=9999,
+        as_list=False
+    )
+    for doc_share_template in docshare_templates:
+        doc = frappe.new_doc('DocShare')
+        doc.user = doc_share_template.user
+        doc.share_doctype = 'Drive Entity'
+        doc.share_name = drive_entity
+        doc.read = doc_share_template.read
+        doc.write = doc_share_template.write
+        doc.share = 0
+        doc.notify_by_email = 0
+        doc.insert(ignore_permissions=True)
 
 @frappe.whitelist()
-def deleteremove(project):
-	drive_entity = frappe.get_value ('Project', project, 'custom_drive_entity')
-	frappe.msgprint(f'drive_entity:{drive_entity}')
+def manage_project_folders(project, operation="add"):
+    frappe.msgprint(f'{project}')
+    drive_entity = None
 
-	#Project
-	frappe.db.set_value ('Project', project, 'custom_drive_entity', '', update_modified=False)
-
-	#Opportunity
-	opportunity = frappe.db.get_all('Opportunity',
-				     filters={
-					     'project': project,
-						 },
-						 fields=['name'],
-						 page_length=9999,
-						 as_list=False
-						 )
-	for opportunity_name in opportunity:
-		frappe.msgprint(f'{opportunity_name.name}')
-		frappe.db.set_value ('Opportunity', opportunity_name, 'custom_drive_entity', '', update_modified=False)
-
-	#Tasks
-	task = frappe.db.get_all('Task',
-				     filters={
-					     'project': project,
-						 },
-						 fields=['name'],
-						 page_length=9999,
-						 as_list=False
-						 )
-	for task_name in task:
-		frappe.msgprint(f'{task_name.name}')
-		frappe.db.set_value ('Task', task_name, 'custom_drive_entity', '', update_modified=False)
-
-	#Quotation
-	quotation = frappe.db.get_all('Quotation',
-				     filters={
-					     'project': project,
-						 },
-						 fields=['name'],
-						 page_length=9999,
-						 as_list=False
-						 )	
-	for quotation_name in quotation:
-		frappe.msgprint(f'{quotation_name.name}')
-		frappe.db.set_value ('Quotation', quotation_name, 'custom_drive_entity', '', update_modified=False)
-
-	#Sales Order
-	salesorder = frappe.db.get_all('Sales Order',
-				     filters={
-					     'project': project,
-						 },
-						 fields=['name'],
-						 page_length=9999,
-						 as_list=False
-						 )
-	for salesorder_name in salesorder:
-		frappe.msgprint(f'{salesorder_name.name}')
-		frappe.db.set_value ('Sales Order', salesorder_name, 'custom_drive_entity', '', update_modified=False)
+    if operation == "add":
+        drive_entity = create_project_folder(project)
+        frappe.db.set_value('Project', project, 'custom_drive_entity', drive_entity, update_modified=False)
+    
+    for doctype in ["Opportunity", "Task", "Quotation", "Sales Order", "Timesheet", "Issue", "Delivery Note", "Installation Note"]:
+        records = frappe.db.get_all(
+            doctype,
+            filters={"project": project},
+            fields=["name"],
+            page_length=9999,
+            as_list=False,
+        )
+        for record in records:
+            frappe.msgprint(f'{operation} : {record.name}')
+            if operation == "add":
+                frappe.db.set_value(doctype, record, 'custom_drive_entity', drive_entity, update_modified=False)
+            elif operation == "remove":
+                frappe.db.set_value(doctype, record, 'custom_drive_entity', '', update_modified=False)
+                
 	
-	#Timesheet
-	timesheet = frappe.db.get_all('Timesheet',
-				     filters={
-					     'project': project,
-						 },
-						 fields=['name'],
-						 page_length=9999,
-						 as_list=False
-						 )
-	for timesheet_name in timesheet:
-		frappe.msgprint(f'{timesheet_name.name}')
-		frappe.db.set_value ('Timesheet', timesheet_name, 'custom_drive_entity', '', update_modified=False)
-
-	#Issue
-	issue = frappe.db.get_all('Issue',
-				     filters={
-					     'project_new': project,
-						 },
-						 fields=['name'],
-						 page_length=9999,
-						 as_list=False
-						 )
-	for issue_name in issue:
-		frappe.msgprint(f'{issue_name.name}')
-		frappe.db.set_value ('Issue', issue_name, 'custom_drive_entity', '', update_modified=False)
-
-	#Delivery Note
-	deliverynote = frappe.db.get_all('Delivery Note',
-				     filters={
-					     'project': project,
-						 },
-						 fields=['name'],
-						 page_length=9999,
-						 as_list=False
-						 )
-	for deliverynote_name in deliverynote:
-		frappe.msgprint(f'{deliverynote_name.name}')
-		frappe.db.set_value ('Delivery Note', deliverynote_name, 'custom_drive_entity', '', update_modified=False)
-	
-	#Installation Note
-	installationnote = frappe.db.get_all('Installation Note',
-				     filters={
-					     'project': project,
-						 },
-						 fields=['name'],
-						 page_length=9999,
-						 as_list=False
-						 )
-	for installationnote_name in installationnote:
-		frappe.msgprint(f'{installationnote_name.name}')
-		frappe.db.set_value ('Installation Note', installationnote_name, 'custom_drive_entity', '', update_modified=False)
-
-	frappe.delete_doc("Drive Entity", drive_entity, ignore_permissions=True)
+    if operation == "remove":
+        drive_entity = frappe.get_value('Project', project, 'custom_drive_entity')
+        frappe.db.set_value('Project', project, 'custom_drive_entity', '', update_modified=False)
+        frappe.delete_doc("Drive Entity", drive_entity, ignore_permissions=True)
