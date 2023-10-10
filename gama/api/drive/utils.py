@@ -72,7 +72,7 @@ def create_folder(name, parent_entity):
 
 def copy_folder(target_entity, source_entity):
     sub_entity = None
-    records = frappe.get_all('Drive Entity',
+    records = frappe.get_value('Drive Entity',
         filters={
             'parent_drive_entity': source_entity,
             'is_active': 1,
@@ -131,7 +131,7 @@ def manage_project_folders(project, operation="add"):
         frappe.db.set_value('Project', project, 'custom_drive_entity', drive_entity, update_modified=False)
     
     for doctype in ["Opportunity", "Task", "Quotation", "Sales Order", "Timesheet", "Issue", "Delivery Note", "Installation Note"]:
-        records = frappe.db.get_value(
+        records = frappe.db.get_all(
             doctype,
             filters={"project": project},
             fields=["name"],
