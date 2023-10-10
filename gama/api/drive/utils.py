@@ -76,7 +76,7 @@ def create_folder(name, parent_entity):
 def copy_folder(target_entity, source_entity):
     frappe.msgprint(f'def copy_folder({target_entity}, {source_entity}):')
     sub_entity = None
-    records = frappe.get_all('Drive Entity',
+    records = frappe.db.get_all('Drive Entity',
         filters={
             'parent_drive_entity': source_entity,
             'is_active': 1,
@@ -105,7 +105,7 @@ def clear_permission(new_drive_entity):
 
 def copy_folder_permission(drive_entity, template_entity):
     clear_permission(drive_entity)
-    docshare_templates = frappe.get_all('DocShare',
+    docshare_templates = frappe.db.get_all('DocShare',
         filters={
             'share_doctype': "Drive Entity",
             'share_name': template_entity
