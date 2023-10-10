@@ -48,7 +48,6 @@ def create_year_folder(name, parent_entity):
 def create_project_folder(name):
     drive_entity = create_year_folder(name, drive_settings.project_folder)
     drive_entity = create_folder(name, drive_entity)
-    frappe.db.set_value('Project', name, 'custom_drive_entity', drive_entity, update_modified=False)
     copy_folder(drive_entity, drive_settings.template_folder)
     return drive_entity
 
