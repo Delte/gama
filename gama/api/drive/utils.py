@@ -135,7 +135,6 @@ def manage_project_folders(project, operation="add"):
         frappe.msgprint(f'drive entity : {drive_entity}')
         frappe.db.set_value('Project', project, 'custom_drive_entity', drive_entity, update_modified=False)
 
-    
     for doctype in ["Opportunity", "Task", "Quotation", "Sales Order", "Timesheet", "Issue", "Delivery Note", "Installation Note"]:
         records = frappe.db.get_all(
             doctype,
