@@ -101,7 +101,7 @@ def clear_permission(new_drive_entity):
 
 def copy_folder_permission(drive_entity, template_entity):
     clear_permission(drive_entity)
-    docshare_templates = frappe.db.get_all('DocShare',
+    docshare_templates = frappe.get_all('DocShare',
         filters={
             'share_doctype': "Drive Entity",
             'share_name': template_entity
@@ -131,7 +131,7 @@ def manage_project_folders(project, operation="add"):
         frappe.db.set_value('Project', project, 'custom_drive_entity', drive_entity, update_modified=False)
     
     for doctype in ["Opportunity", "Task", "Quotation", "Sales Order", "Timesheet", "Issue", "Delivery Note", "Installation Note"]:
-        records = frappe.db.get_all(
+        records = frappe.get_all(
             doctype,
             filters={"project": project},
             fields=["name"],
