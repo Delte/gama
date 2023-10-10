@@ -46,8 +46,11 @@ def create_year_folder(name, parent_entity):
     return create_folder(name, parent_entity)
 	
 def create_project_folder(name):
+    frappe.msgprint(f'def create_project_folder({name}):')
     drive_entity = create_year_folder(name, drive_settings.project_folder)
+    frappe.msgprint(f'drive_entity : {drive_entity}')
     drive_entity = create_folder(name, drive_entity)
+    frappe.msgprint(f'drive_entity : {drive_entity}')
     copy_folder(drive_entity, drive_settings.template_folder)
     return drive_entity
 
@@ -71,6 +74,7 @@ def create_folder(name, parent_entity):
     return hex_code
 
 def copy_folder(target_entity, source_entity):
+    frappe.msgprint(f'def copy_folder({target_entity}, {source_entity}):')
     sub_entity = None
     records = frappe.get_all('Drive Entity',
         filters={
@@ -128,6 +132,7 @@ def manage_project_folders(project, operation="add"):
 
     if operation == "add":
         drive_entity = create_project_folder(project)
+        frappe.msgprint(f'drive entity : {drive_entity}')
         frappe.db.set_value('Project', project, 'custom_drive_entity', drive_entity, update_modified=False)
 
     
