@@ -72,7 +72,7 @@ def create_folder(name, parent_entity):
 
 def copy_folder(target_entity, source_entity):
     sub_entity = None
-    records = frappe.get_value('Drive Entity',
+    records = frappe.get_all('Drive Entity',
         filters={
             'parent_drive_entity': source_entity,
             'is_active': 1,
