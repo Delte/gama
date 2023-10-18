@@ -88,37 +88,42 @@ def copy_folder(target_entity, source_entity):
         sub_entity = copy_folder(drive_entity, record.name)
     return sub_entity
 
-def clear_permission(new_drive_entity):
-    records = frappe.db.get_all('DocShare',
+def clear_permission(drive_entity):
+    frappe.msgprint(f"def clear_permission({drive_entity}):")
+    records = frappe.db.get_all('Drive DocShare',
         filters={
             'share_doctype': "Drive Entity",
-            'share_name': new_drive_entity
+            'share_name': drive_entity
         },
         fields=['name'],
     )
     for record in records:
-        frappe.delete_doc("DocShare", record.name, ignore_permissions=True)
+        frappe.msgprint(f"{record}")
+        frappe.delete_doc("Drive DocShare", record.name, ignore_permissions=True)
 
 def copy_folder_permission(drive_entity, template_entity):
     clear_permission(drive_entity)
-    docshare_templates = frappe.db.get_all('DocShare',
+    records = frappe.db.get_all('Drive DocShare',
         filters={
             'share_doctype': "Drive Entity",
             'share_name': template_entity
         },
-        fields=['name', 'user', 'read', 'write'],
+        fields=['user_doctype','user_name', 'read', 'write'],
         page_length=9999,
         as_list=False
     )
-    for doc_share_template in docshare_templates:
-        doc = frappe.new_doc('DocShare')
-        doc.user = doc_share_template.user
+    for record in records:
+        doc = frappe.new_doc('Drive DocShare')
         doc.share_doctype = 'Drive Entity'
         doc.share_name = drive_entity
-        doc.read = doc_share_template.read
-        doc.write = doc_share_template.write
+        doc.user_doctype = record.user_doctype
+        doc.user_name= record.user_name
+        doc.read = record.read
+        doc.write = record.write
         doc.share = 0
-        doc.notify_by_email = 0
+        doc.everyone = 0
+        doc.public = 0
+        doc.notify = 0
         doc.insert(ignore_permissions=True)
 
 @frappe.whitelist()
@@ -130,6 +135,7 @@ def manage_project_folders(project, operation="add"):
         drive_entity = create_project_folder(project)
         frappe.msgprint(f'drive entity : {drive_entity}')
         frappe.db.set_value('Project', project, 'custom_drive_entity', drive_entity, update_modified=False)
+    
     for doctype in ["Opportunity", "Task", "Quotation", "Sales Order", "Timesheet", "Issue", "Delivery Note", "Installation Note"]:
         records = frappe.db.get_all(
             doctype,
@@ -144,7 +150,8 @@ def manage_project_folders(project, operation="add"):
                 frappe.db.set_value(doctype, record.name, 'custom_drive_entity', drive_entity, update_modified=False)
             elif operation == "remove":
                 frappe.db.set_value(doctype, record.name, 'custom_drive_entity', '', update_modified=False)
+    
     if operation == "remove":
         drive_entity = frappe.get_value('Project', project, 'custom_drive_entity')
+        frappe.delete_doc('Drive Entity',drive_entity)
         frappe.db.set_value('Project', project, 'custom_drive_entity', '', update_modified=False)
-        frappe.delete_doc("Drive Entity", drive_entity, ignore_permissions=True)

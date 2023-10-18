@@ -18,10 +18,7 @@
   "create",
   "column_break_vuiso",
   "project_folder_remove",
-  "remove",
-  "user_permission_section",
-  "user",
-  "permission"
+  "remove"
  ],
  "fields": [
   {
@@ -67,22 +64,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "user_permission_section",
-   "fieldtype": "Section Break",
-   "label": "User Permission"
-  },
-  {
-   "fieldname": "user",
-   "fieldtype": "Link",
-   "label": "User",
-   "options": "User"
-  },
-  {
-   "fieldname": "permission",
-   "fieldtype": "Button",
-   "label": "Permission"
-  },
-  {
    "fieldname": "create",
    "fieldtype": "Button",
    "label": "Create"
@@ -112,7 +93,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-10-06 10:24:00.424759",
+ "modified": "2023-10-18 11:41:35.055710",
  "modified_by": "Administrator",
  "module": "Gama Settings",
  "name": "Gama Drive Settings",
