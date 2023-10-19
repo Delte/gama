@@ -89,7 +89,6 @@ def copy_folder(target_entity, source_entity):
     return sub_entity
 
 def clear_permission(drive_entity):
-    frappe.msgprint(f"def clear_permission({drive_entity}):")
     records = frappe.db.get_all('Drive DocShare',
         filters={
             'share_doctype': "Drive Entity",
