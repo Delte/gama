@@ -97,7 +97,6 @@ def clear_permission(drive_entity):
         fields=['name'],
     )
     for record in records:
-        frappe.msgprint(f"{record}")
         frappe.delete_doc("Drive DocShare", record.name, ignore_permissions=True)
 
 def copy_folder_permission(drive_entity, template_entity):
