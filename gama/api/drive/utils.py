@@ -71,16 +71,16 @@ def create_folder(name, parent_entity):
         new_drive_entity.color = "#525252"
         new_drive_entity.insert(ignore_permissions=True)
     
-        # doc = frappe.new_doc('Drive DocShare')
-        # doc.share_doctype = 'Drive Entity'
-        # doc.share_name = hex_code
-        # doc.read = 1
-        # doc.write = 0
-        # doc.share = 0
-        # doc.everyone = 1
-        # doc.public = 0
-        # doc.notify = 0
-        # doc.insert(ignore_permissions=True)
+        doc = frappe.new_doc('Drive DocShare')
+        doc.share_doctype = 'Drive Entity'
+        doc.share_name = hex_code
+        doc.read = 1
+        doc.write = 0
+        doc.share = 0
+        doc.everyone = 1
+        doc.public = 0
+        doc.notify = 0
+        doc.insert(ignore_permissions=True)
     
     return hex_code
 
