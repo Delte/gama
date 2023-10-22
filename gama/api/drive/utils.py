@@ -43,7 +43,9 @@ def create(doc_type, name):
 
 def create_year_folder(name, parent_entity):
     name = name[-10:][:4]
-    return create_folder(name, parent_entity)
+    drive_entity = create_folder(name, parent_entity)
+    
+    return drive_entity
 	
 def create_project_folder(name):
     drive_entity = create_year_folder(name, drive_settings.project_folder)
@@ -69,18 +71,16 @@ def create_folder(name, parent_entity):
         new_drive_entity.color = "#525252"
         new_drive_entity.insert(ignore_permissions=True)
     
-        # doc = frappe.new_doc('Drive DocShare')
-        # doc.share_doctype = 'Drive Entity'
-        # doc.share_name = hex_code
-        # doc.user_doctype = "User Group"
-        # doc.user_name= "Gama"
-        # doc.read = 1
-        # doc.write = 0
-        # doc.share = 0
-        # doc.everyone = 0
-        # doc.public = 0
-        # doc.notify = 0
-        # doc.insert(ignore_permissions=True)
+        doc = frappe.new_doc('Drive DocShare')
+        doc.share_doctype = 'Drive Entity'
+        doc.share_name = hex_code
+        doc.read = 1
+        doc.write = 0
+        doc.share = 0
+        doc.everyone = 1
+        doc.public = 0
+        doc.notify = 0
+        doc.insert(ignore_permissions=True)
     
     return hex_code
 
