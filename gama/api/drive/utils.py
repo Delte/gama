@@ -146,7 +146,7 @@ def manage_project_folders(project, operation="add"):
     if operation == "add":
         drive_entity = create_project_folder(project)
         frappe.msgprint(f'drive entity : {drive_entity}')
-        frappe.db.set_single_value('Project', project, 'custom_drive_entity', drive_entity, update_modified=False)
+        frappe.db.set_value('Project', project, 'custom_drive_entity', drive_entity, update_modified=False)
     
     for doctype in ["Opportunity", "Task", "Quotation", "Sales Order", "Timesheet", "Issue", "Delivery Note", "Installation Note"]:
         records = frappe.db.get_all(
@@ -159,11 +159,11 @@ def manage_project_folders(project, operation="add"):
         for record in records:
             frappe.msgprint(f'{operation} : {record.name}')
             if operation == "add":
-                frappe.db.set_single_value(doctype, record.name, 'custom_drive_entity', drive_entity, update_modified=False)
+                frappe.db.set_value(doctype, record.name, 'custom_drive_entity', drive_entity, update_modified=False)
             elif operation == "remove":
-                frappe.db.set_single_value(doctype, record.name, 'custom_drive_entity', '', update_modified=False)
+                frappe.db.set_value(doctype, record.name, 'custom_drive_entity', '', update_modified=False)
     
     if operation == "remove":
         drive_entity = frappe.get_value('Project', project, 'custom_drive_entity')
         frappe.delete_doc('Drive Entity',drive_entity)
-        frappe.db.set_single_value('Project', project, 'custom_drive_entity', '', update_modified=False)
+        frappe.db.set_value('Project', project, 'custom_drive_entity', '', update_modified=False)
