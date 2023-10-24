@@ -154,5 +154,5 @@ def manage_project_folders(project, operation="add"):
     
     if operation == "remove":
         drive_entity = frappe.get_value('Project', project, 'custom_drive_entity')
-        frappe.delete_doc('Drive Entity',drive_entity)
         frappe.db.set_value('Project', project, 'custom_drive_entity', '', update_modified=False)
+        frappe.delete_doc('Drive Entity',drive_entity)
