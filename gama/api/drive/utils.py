@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 import frappe
 import uuid
-
+#from drive.api.files import (create_folder, unshare_entities)
 drive_settings = frappe.get_doc("Gama Drive Settings")
 
 @frappe.whitelist()
@@ -70,18 +70,6 @@ def create_folder(name, parent_entity):
         new_drive_entity.is_active = True
         new_drive_entity.color = "#525252"
         new_drive_entity.insert(ignore_permissions=True)
-    
-        doc = frappe.new_doc('Drive DocShare')
-        doc.share_doctype = 'Drive Entity'
-        doc.share_name = hex_code
-        doc.read = 1
-        doc.write = 0
-        doc.share = 0
-        doc.everyone = 1
-        doc.public = 0
-        doc.notify = 0
-        doc.insert(ignore_permissions=True)
-    
     return hex_code
 
 def copy_folder(target_entity, source_entity):
@@ -112,6 +100,7 @@ def clear_permission(drive_entity):
     )
     for record in records:
         frappe.delete_doc("Drive DocShare", record.name, ignore_permissions=True)
+        frappe.msgprint(f'Drive DocShare: {record.name}')
 
 def copy_folder_permission(drive_entity, template_entity):
     clear_permission(drive_entity)
