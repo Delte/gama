@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 import frappe
 import uuid
-#from drive.api.files import (create_folder, unshare_entities)
+
 drive_settings = frappe.get_doc("Gama Drive Settings")
 
 @frappe.whitelist()
@@ -44,9 +44,9 @@ def create(doc_type, name):
 def create_year_folder(name, parent_entity):
     name = name[-10:][:4]
     drive_entity = create_folder(name, parent_entity)
-    
+
     return drive_entity
-	
+
 def create_project_folder(name):
     drive_entity = create_year_folder(name, drive_settings.project_folder)
     drive_entity = create_folder(name, drive_entity)
@@ -100,7 +100,6 @@ def clear_permission(drive_entity):
     )
     for record in records:
         frappe.delete_doc("Drive DocShare", record.name, ignore_permissions=True)
-        frappe.msgprint(f'Drive DocShare: {record.name}')
 
 def copy_folder_permission(drive_entity, template_entity):
     clear_permission(drive_entity)
@@ -113,6 +112,7 @@ def copy_folder_permission(drive_entity, template_entity):
         page_length=9999,
         as_list=False
     )
+
     for record in records:
         doc = frappe.new_doc('Drive DocShare')
         doc.share_doctype = 'Drive Entity'
@@ -136,7 +136,7 @@ def manage_project_folders(project, operation="add"):
         drive_entity = create_project_folder(project)
         frappe.msgprint(f'drive entity : {drive_entity}')
         frappe.db.set_value('Project', project, 'custom_drive_entity', drive_entity, update_modified=False)
-    
+
     for doctype in ["Opportunity", "Task", "Quotation", "Sales Order", "Timesheet", "Issue", "Delivery Note", "Installation Note"]:
         records = frappe.db.get_all(
             doctype,
