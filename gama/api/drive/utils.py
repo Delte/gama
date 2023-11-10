@@ -38,7 +38,7 @@ def create(doc_type, name):
                 drive_entity = create_folder(data.name if doc_type == 'Project' else data.project,drive_entity)
 
             if doctype_details.template == 1 :
-                       copy_folder(drive_entity, doctype_details.template_entity)
+                copy_folder(drive_entity, doctype_details.template_entity)
 
             return drive_entity
 
