@@ -104,6 +104,11 @@ def create_folder(name, parent_entity, allow_comments=False, allow_download=Fals
         new_drive_entity.allow_download = allow_download
         new_drive_entity.color = "#525252"
         new_drive_entity.insert(ignore_permissions=True)
+
+    else :
+        frappe.db.set_value('Drive Entity', new_drive_entity, 'allow_comments', allow_comments, update_modified=False)
+        frappe.db.set_value('Drive Entity', new_drive_entity, 'allow_download', allow_download, update_modified=False)
+    
     return hex_code
 
 def copy_folder(target_entity, source_entity):
