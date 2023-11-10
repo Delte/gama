@@ -42,35 +42,6 @@ def create(doc_type, name):
 
             return drive_entity
 
-    # for doctype_details in drive_settings.doctype_details:
-    #     if doc_type == doctype_details.doc_type:
-    #         if doctype_details.project == 1:
-    #             drive_entity = create_project_folder(data.name if doc_type == 'Project' else data.project)
-    #         else:
-    #             drive_entity = doctype_details.doc_type_drive_entity
-
-    #         for folder_field in ["folder_name_1", "folder_name_2", "folder_name_3", "folder_name_4"]:
-    #             folder_name = getattr(doctype_details, folder_field)
-    #             if folder_name:
-    #                 drive_entity_present = check_folder_entity(
-    #                     frappe.render_template(folder_name, context={"doc": data}, is_path=False),
-    #                     drive_entity,
-    #                 )
-    #                 if drive_entity_present is None:
-    #                     if folder_name == '.YYYY.':
-    #                         folder_name_template = frappe.render_template(
-    #                             doctype_details.yearly_folder_based_on, context={"doc": data}, is_path=False
-    #                         )
-    #                         drive_entity_present = create_year_folder(folder_name_template, drive_entity)
-    #                     else:
-    #                         folder_name_template = frappe.render_template(
-    #                             folder_name, context={"doc": data}, is_path=False
-    #                         )
-    #                         drive_entity_present = create_folder(folder_name_template, drive_entity)
-    #                 drive_entity = drive_entity_present
-
-    #         return drive_entity
-
     frappe.msgprint("No folder defined for this Form! Please contact the System Administrator.")
 
 def create_year_folder(name, parent_entity):
