@@ -5,20 +5,20 @@ frappe.ui.form.on('Gama Drive Settings', {
 	refresh(frm) {
 	},
 	create(frm){
-		console.log(frm.doc.project_folder_create);
+		console.log(frm.doc.project);
 		frappe.call({
 			method: "gama.api.drive.utils.manage_project_folders",
 			args: {
-				project: frm.doc.project_folder_create
+				project: frm.doc.project
 			}
 		});
 	},
 	remove(frm){
-		console.log(frm.doc.project_folder_remove);
+		console.log(frm.doc.project);
 		frappe.call({
 			method: "gama.api.drive.utils.manage_project_folders",
 			args: {
-				project: frm.doc.project_folder_remove,
+				project: frm.doc.project,
 				operation: 'remove'
 			}
 		});
