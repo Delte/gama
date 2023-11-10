@@ -8,17 +8,12 @@
  "engine": "InnoDB",
  "field_order": [
   "main_folder",
-  "column_break_ayjg9",
-  "project_folder",
-  "template_folder",
-  "doctype_settings_section",
-  "doctype_details",
-  "section_break_fluzs",
-  "project_folder_create",
+  "column_break_usde",
+  "project",
   "create",
-  "column_break_vuiso",
-  "project_folder_remove",
-  "remove"
+  "remove",
+  "doctype_settings_section",
+  "doctype_details"
  ],
  "fields": [
   {
@@ -26,26 +21,6 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Main Folder",
-   "options": "Drive Entity",
-   "reqd": 1
-  },
-  {
-   "fieldname": "column_break_ayjg9",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "project_folder",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Project Folder",
-   "options": "Drive Entity",
-   "reqd": 1
-  },
-  {
-   "fieldname": "template_folder",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Template Folder",
    "options": "Drive Entity",
    "reqd": 1
   },
@@ -60,10 +35,6 @@
    "options": "Gama Drive Settings Doctype Details"
   },
   {
-   "fieldname": "column_break_vuiso",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "create",
    "fieldtype": "Button",
    "label": "Create"
@@ -74,26 +45,20 @@
    "label": "Remove"
   },
   {
-   "fieldname": "project_folder_create",
+   "fieldname": "column_break_usde",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "project",
    "fieldtype": "Link",
    "label": "Project",
    "options": "Project"
-  },
-  {
-   "fieldname": "project_folder_remove",
-   "fieldtype": "Link",
-   "label": "Project",
-   "options": "Project"
-  },
-  {
-   "fieldname": "section_break_fluzs",
-   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-10-18 11:41:35.055710",
+ "modified": "2023-11-10 12:54:13.108687",
  "modified_by": "Administrator",
  "module": "Gama Settings",
  "name": "Gama Drive Settings",
