@@ -140,8 +140,7 @@ def copy_folder_permission(drive_entity, template_entity):
 
 @frappe.whitelist()
 def manage_project_folders(project,operation="add"):
-    frappe.msgprint(_("Project folder will be created at background in 1-3 minutes, please refresh page later for Drive button."))
-    frappe.enqueue(project_folders,queue='long',project=project,operation=operation)
+    frappe.enqueue(project_folders,queue='default',project=project,operation=operation)
 
 def project_folders(project, operation):
     drive_entity = None
