@@ -42,7 +42,7 @@ def create(doc_type, name):
 
             return drive_entity
 
-    frappe.msgprint("No folder defined for this Form! Please contact the System Administrator.")
+    frappe.msgprint(_("No folder defined for this Form! Please contact the System Administrator."))
 
 def create_year_folder(name, parent_entity):
     name = name[-10:][:4]
@@ -140,7 +140,7 @@ def copy_folder_permission(drive_entity, template_entity):
 
 @frappe.whitelist()
 def manage_project_folders(project,operation="add"):
-    frappe.msgprint("Project folder will be created at background in 1-3 minutes, please refresh page later for <b>Drive</b> button.")
+    frappe.msgprint(_("Project folder will be created at background in 1-3 minutes, please refresh page later for Drive button."))
     frappe.enqueue(project_folders,queue='long',project=project,operation=operation)
 
 def project_folders(project, operation):
