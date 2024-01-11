@@ -2,10 +2,10 @@ from __future__ import unicode_literals
 import frappe
 import uuid
 
+drive_settings = frappe.get_doc("Gama Drive Settings")
 
 @frappe.whitelist()
 def create(doc_type, name):
-    drive_settings = frappe.get_doc("Gama Drive Settings")
     data = frappe.get_doc(doc_type, name)
     drive_entity = None
 
@@ -13,32 +13,34 @@ def create(doc_type, name):
         if doc_type == doctype_details.doc_type:
             drive_entity = doctype_details.doc_type_drive_entity
 
-            for folder_field in ["folder_name_1", "folder_name_2", "folder_name_3", "folder_name_4"]:
-                folder_name = getattr(doctype_details, folder_field)
-                if folder_name:
-                    drive_entity_present = check_folder_entity(
-                        frappe.render_template(folder_name, context={"doc": data}, is_path=False),
-                        drive_entity,
-                    )
-                    if drive_entity_present is None:
-                        if folder_name == '.YYYY.':
-                            folder_name_template = frappe.render_template(
-                                doctype_details.yearly_folder_based_on, context={"doc": data}, is_path=False
-                            )
-                            drive_entity_present = create_year_folder(folder_name_template, drive_entity)
-                        else:
-                            folder_name_template = frappe.render_template(
-                                folder_name, context={"doc": data}, is_path=False
-                            )
-                            drive_entity_present = create_folder(folder_name_template, drive_entity)
-                    drive_entity = drive_entity_present
-        
             if doctype_details.project == 1 :
                 drive_entity = create_year_folder(data.name if doc_type == 'Project' else data.project, drive_entity)
                 drive_entity = create_folder(data.name if doc_type == 'Project' else data.project,drive_entity)
-
+         
+            else:
+                for folder_field in ["folder_name_1", "folder_name_2", "folder_name_3", "folder_name_4"]:
+                    folder_name = getattr(doctype_details, folder_field)
+                    if folder_name:
+                        drive_entity_present = check_folder_entity(
+                            frappe.render_template(folder_name, context={"doc": data}, is_path=False),
+                            drive_entity,
+                        )
+                        if drive_entity_present is None:
+                            if folder_name == '.YYYY.':
+                                folder_name_template = frappe.render_template(
+                                    doctype_details.yearly_folder_based_on, context={"doc": data}, is_path=False
+                                )
+                                drive_entity_present = create_year_folder(folder_name_template, drive_entity)
+                            else:
+                                folder_name_template = frappe.render_template(
+                                    folder_name, context={"doc": data}, is_path=False
+                                )
+                                drive_entity_present = create_folder(folder_name_template, drive_entity)
+                        drive_entity = drive_entity_present
+            
             if doctype_details.template == 1 :
                 copy_folder(drive_entity, doctype_details.template_entity)
+            
 
             return drive_entity
 
@@ -51,7 +53,6 @@ def create_year_folder(name, parent_entity):
     return drive_entity
 
 def create_project_folder(name):
-    drive_settings = frappe.get_doc("Gama Drive Settings")
     drive_entity = create_year_folder(name, drive_settings.doctype_details.doc_type_drive_entity)
     drive_entity = create_folder(name, drive_entity)
     copy_folder(drive_entity, drive_settings.doctype_details.template_entity)
@@ -139,15 +140,13 @@ def copy_folder_permission(drive_entity, template_entity):
         doc.insert(ignore_permissions=True)
 
 @frappe.whitelist()
-def manage_project_folders(project,operation="add"):
-    frappe.msgprint("Project folder will be created at background in 1-3 minutes, please refresh page later for <b>Drive</b> button.")
-    frappe.enqueue(project_folders,queue='long',project=project,operation=operation)
-
-def project_folders(project, operation):
+def manage_project_folders(project, operation="add"):
+    frappe.msgprint(f'{project}')
     drive_entity = None
 
     if operation == "add":
         drive_entity = create("Project", project)
+        frappe.msgprint(f'drive entity : {drive_entity}')
         frappe.db.set_value('Project', project, 'custom_drive_entity', drive_entity, update_modified=False)
 
     for doctype in ["Opportunity", "Task", "Quotation", "Sales Order", "Timesheet", "Issue", "Delivery Note", "Installation Note"]:
