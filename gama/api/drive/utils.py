@@ -140,7 +140,7 @@ def copy_folder_permission(drive_entity, template_entity):
 
 @frappe.whitelist()
 def manage_project_folders(project,operation="add"):
-    frappe.enqueue(project_folders,queue='long',project=project,operation=operation)
+    frappe.enqueue(project_folders,queue='default',project=project,operation=operation)
 
 def project_folders(project, operation):
     drive_entity = None
