@@ -29,8 +29,34 @@ app_license = "MIT"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
-# doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
+doctype_js = {
+    "Customer" : "public/js/customer_form.js",
+    "Opportunity" : "public/js/opportunity_form.js",
+    "Delivery Note" : "public/js/delivery_note_form.js",
+    "Installation Note" : "public/js/installation_note_form.js",
+    "Issue" : "public/js/issue_form.js",
+    "Item" : "public/js/item.js",
+    "Item Price" : "public/js/item_price_form.js",
+    "Lead" : "public/js/lead_form.js",
+    "Material Request" : "public/js/material_request_form.js",
+    "Opportunity" : "public/js/opportunity_form.js",
+    "Price Analysis" : "public/js/price_analysis_form.js",
+    "Project" : "public/js/project_form.js",
+    "Purchase Order" : "public/js/purchase_order_form.js",
+    "Purchase Receipt" : "public/js/purchase_receipt_form.js",
+    "Quotation" : "public/js/quotation_form.js",
+    "Request for Quotation" : "public/js/request_for_quotation_form.js",
+    "Sales Order" : "public/js/sales_order_form.js",
+    "Stock Entry" : "public/js/stock_entry_form.js",
+    "Stock Reconciliation" : "public/js/stock_reconciliation_from.js",
+    "Supplier Quotation" : "public/js/supplier_quotation_form.js",
+    "Task" : "public/js/task_form.js",
+    "Time Sheet" : "public/js/time_sheet_form.js"
+    }
+doctype_list_js = {
+    "Purchase Invoice" : "public/js/purchase_invoice_list.js",
+    "Task" : "public/js/task_list"
+    }
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
