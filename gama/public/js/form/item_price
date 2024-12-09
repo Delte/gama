@@ -1,0 +1,49 @@
+frappe.ui.form.on('Item Price', {
+  item_code(frm) {
+    frappe.call({
+      method: 'frappe.client.get_value',
+      args: {
+        doctype: 'Item',
+        filters: {
+          'item_code': frm.doc.item_code,
+        },
+        fieldname: ['stock_uom']
+      },
+      callback: function (data) {
+        frm.set_value('uom', data.message.stock_uom);
+        frm.refresh_field('uom');
+      }
+    });
+	},
+  
+  onload(frm){
+    if(frm.doc.buying == 1)
+    {
+      cur_frm.set_df_property('item_rate','hidden',1);
+      cur_frm.set_df_property('installation_rate','hidden',1);
+      cur_frm.set_df_property('price_list_rate','read_only',0);
+    }
+    else if(frm.doc.selling == 1)
+    {
+      cur_frm.set_df_property('item_rate','hidden',0);
+      cur_frm.set_df_property('installation_rate','hidden',0);
+      cur_frm.set_df_property('price_list_rate','read_only',1);
+    }
+	},
+  
+	item_rate(frm) {
+		frm.set_value('price_list_rate',frm.doc.item_rate + frm.doc.installation_rate);
+		frm.refresh_field('price_list_rate');
+	},
+	installation_rate(frm) {
+		frm.set_value('price_list_rate',frm.doc.item_rate + frm.doc.installation_rate);
+		frm.refresh_field('price_list_rate');
+	},
+	refresh(frm){
+		cur_frm.set_df_property('item_rate','read_only',0);
+		cur_frm.set_df_property('installation_rate','read_only',0);
+		cur_frm.set_df_property('min_qty','read_only',0);
+		cur_frm.set_df_property('item_code','read_only',0);
+		cur_frm.set_df_property('uom','read_only',0);
+	}
+});

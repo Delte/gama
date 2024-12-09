@@ -1,0 +1,84 @@
+frappe.ui.form.on('Sales Invoice', {
+	onload(frm, cdt, cdn){
+		if (!frappe.user.has_role('System Manager')){
+			  setTimeout(() => {
+				frm.remove_custom_button('Fetch Timesheet');
+			  frm.remove_custom_button('Quotation','Get Items From');
+			  frm.remove_custom_button('Quality Inspection(s)','Create');
+			  frm.remove_custom_button('Sales Order','Get Items From');
+				},100);
+		}
+	},
+	customer(frm, cdt, cdn){
+    if (!frappe.user.has_role('System Manager')){
+		setTimeout(() => {
+		if(frm.doc.territory == 'Yurt İçi')
+		{
+			 cur_frm.page.remove_inner_button(__('Get Items From'));
+			 frm.remove_custom_button('Sales Order',"Get Items From");
+			 	
+		}
+	},200);
+}
+
+	},
+
+  before_save(frm, cdt, cdn){
+   var item_count=0;
+    var min_order_item_count = 0;
+    var tbl = frm.doc.items || [];
+    var i = tbl.length;
+
+
+	if (frm.doc.territory == 'Yurt İçi'){
+      while (i--)
+      {
+       if(!frm.doc.items[i].delivery_note)
+        {
+          item_count++;
+        }
+      }
+
+   /* if(item_count > 0 && !frappe.user.has_role('System Manager'))
+    {
+      msgprint("İrsaliyesi Kesilmemiş Ürünler Bulunmakta. Lütfen Irsaliye Olmadan Fatura Oluşturmayınız.");
+      frappe.validated = false;
+    }*/
+		}
+	},
+
+	refresh(frm, cdt, cdn){
+		if ((frm.doc.docstatus == 0) && (frappe.user.has_role('Accounts User') || frappe.user.has_role('Accounts Manager') || frappe.user.has_role('System Manager')) && !frm.doc.custom_drive_entity)
+		{
+	    frm.add_custom_button(__("Create Folder"), function() {
+    frappe.call({
+          method: "gama.api.drive.utils.create",
+          args: {
+              doc_type: frm.doctype,
+              name: frm.doc.name
+              },
+              callback: function (data){
+              frm.set_value('custom_drive_entity', data.message);
+              refresh_field(frm.doc.drive_entity);
+              frm.save();
+              },
+          });
+
+        });	    
+		}
+		if (frm.doc.custom_drive_entity){
+      frm.add_custom_button(__("Drive"), function() {
+      window.open(origin+'/drive/folder/'+frm.doc.custom_drive_entity);
+    });
+	}
+
+		if (!frappe.user.has_role('System Manager')){
+			  setTimeout(() => {
+				frm.remove_custom_button('Fetch Timesheet');
+				frm.remove_custom_button('Quotation','Create');
+				frm.remove_custom_button('Quality Inspection(s)','Create');
+		//		frm.remove_custom_button('Sales Order','Get Items From');
+				},100);
+		}
+	},
+});

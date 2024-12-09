@@ -1,0 +1,65 @@
+frappe.ui.form.on('Delivery Note', {
+shipping_address_name(frm) {
+		frappe.call({
+	 	method: 'frappe.client.get_value',
+		args:{
+			doctype:'Address',
+			filters:{
+				name:frm.doc.shipping_address_name,
+			},
+			fieldname:['city','address_title']
+		},
+		callback:function (data) {
+			console.log(data.message.city);
+						frm.set_value('address_title', data.message.address_title);
+						refresh_field('address_title');
+						frm.set_value('city', data.message.city);
+						refresh_field('city');
+		}
+	});
+},
+	refresh(frm) {
+	    if (frm.doc.custom_drive_entity){
+    frm.add_custom_button(__("Drive"), function() {
+        window.open(origin+'/drive/folder/'+frm.doc.custom_drive_entity);
+    });
+}
+		if ((frappe.user.has_role('Shipment & Installation Manager') || frappe.user.has_role('System Manager')) &&frm.doc.docstatus==1){
+		frm.add_custom_button(__('Create Installation / Service'), function() {
+			frappe.db.insert({doctype: 'Task', 'subject': 'Montaj / Servis - '+frm.doc.subject, 'project': frm.doc.project, 'sales_order': frm.doc.sales_order, 'department': 'Dış Montaj - GAMA', 'address_name':frm.doc.shipping_address_name, 'address_display': frm.doc.shipping_address, 'description': frm.doc.description, 'exp_end_date': frm.doc.installation_date, 'type': 'Montaj / Servis'});
+			frappe.db.set_value('Project', frm.doc.project, 'percent_complete_method', 'Task Completion');
+			frappe.show_alert({message:__('Montaj/Servis Görevi Oluşturuldu'), indicator:'green'}, 5);
+			frm.save();
+		}, __("Create Task"));
+}
+    else if(frappe.user.has_role('Installation User')){
+      setTimeout(() => {
+				cur_frm.page.remove_inner_button(__('Delivery Trip'),  __('Create'));
+				cur_frm.page.remove_inner_button(__('Sales Invoice'),  __('Create'));
+				cur_frm.page.remove_inner_button(__('Shipment'),  __('Create'));
+				cur_frm.page.remove_inner_button(__('Subscription'),  __('Create'));
+				cur_frm.page.remove_inner_button(__('Stock Ledger'),  __('View'));			
+				frm.set_df_property('currency_and_price_list','hidden',1);
+				frm.set_df_property('customer_po_details','hidden',1);
+      },100);
+    }
+	},
+	onload (frm,  cdt, cdn){
+		if(frappe.user.has_role('Installation User')){
+		setTimeout(() => {
+			    frm.set_df_property('currency_and_price_list','hidden',1);
+			cur_frm.page.remove_inner_button(__('Delivery Trip'),  __('Create'));
+			cur_frm.page.remove_inner_button(__('Sales Invoice'),  __('Create'));
+			cur_frm.page.remove_inner_button(__('Shipment'),  __('Create'));
+			cur_frm.page.remove_inner_button(__('Subscription'),  __('Create'));
+			cur_frm.page.remove_inner_button(__('Stock Ledger'),  __('View'));
+			frm.set_df_property('currency_and_price_list','hidden',1);
+			frm.set_df_property('customer_po_details','hidden',1);
+		},100);
+	}
+	},
+	before_save (frm,  cdt, cdn){
+		frm.set_value('subject',frm.doc.abbr+' - '+frm.doc.address_title+' - '+frm.doc.city);
+		refresh_field('subject');
+	},
+});

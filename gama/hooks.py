@@ -2,7 +2,7 @@ from . import __version__ as app_version
 
 app_name = "gama"
 app_title = "Gama"
-app_publisher = "Gama Reklam San. ve Tic."
+app_publisher = "Gama Reklam San. ve Tic. A.Ş."
 app_description = "Frappe Customizations for Gama Reklam San. ve Tic. A.Ş."
 app_email = "administrator@gamareklam.com"
 app_license = "MIT"
@@ -30,7 +30,34 @@ app_license = "MIT"
 
 # include js in doctype views
 # doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {  "Request for Quotation" : "public/js/form/request_for_quotation",
+                "Opportunity" : "public/js/form/opportunity",
+                "Supplier Quotation" : "public/js/form/supplier_quotation",
+                "Lead" : "public/js/form/lead",
+                "Task" : "public/js/form/task",
+                "Sales Order" : "public/js/form/sales_order",
+                "Material Request" : "public/js/form/material_request",
+                "Item" : "public/js/form/item",
+                "Delivery Note" : "public/js/form/delivery_note",
+                "Purchase Invoice" : "public/js/form/purchase_invoice",
+                "Sales Invoice" : "public/js/form/sales_invoice",
+                "Project" : "public/js/form/project",
+                "Installation Note" : "public/js/form/installation_note",
+                "Issue" : "public/js/form/issue",
+                "Timesheet" : "public/js/form/timesheet",
+                "Quotation" : "public/js/form/quotation",
+                "Stock Entry" : "public/js/form/stock_entry",
+                "Purchase Receipt" : "public/js/form/purchase_receipt",
+                "Customer" : "public/js/form/customer",
+                "Purchase Order" : "public/js/form/purchase_order",
+                "Price Analysis" : "public/js/form/price_analysis",
+                "Stock Reconciliation" : "Stock Reconciliation",
+             } 
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
+doctype_list_js = {
+                    "Purchase Invoice" : "public/js/list/purchase_invoice",
+                    "Task" : "public/js/list/task",
+                  }
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
