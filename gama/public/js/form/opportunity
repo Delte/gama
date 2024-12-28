@@ -319,13 +319,13 @@ frappe.ui.form.on('Opportunity', {
           () => frm.save(),
           () => frappe.show_alert({message:__('Proje Oluşturuldu'), indicator:'green'}, 5),
           () => cur_frm.cscript.create_tasks(frm),
-//         () => frappe.call({
-//           method: "gama.api.drive.utils.manage_project_folders",
-//            args: {
-//                project: frm.doc.project,
-//                },
-//            }),
-//          () => frappe.show_alert({message:__('Proje Klaösür 1-3 dakika içinde oluşacak.'), indicator:'green'}, 5),
+          () => frappe.call({
+            method: "gama.api.drive.utils.manage_project_folders",
+            args: {
+                project: frm.doc.project,
+                },
+            }),
+          () => frappe.show_alert({message:__('Proje Klaösür 1-3 dakika içinde oluşacak.'), indicator:'green'}, 5),
   
         ]);
       });
