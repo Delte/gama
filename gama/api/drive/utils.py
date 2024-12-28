@@ -42,7 +42,7 @@ def create(doc_type, name):
 
             return drive_entity
 
-    frappe.msgprint(_("No folder defined for this Form! Please contact the System Administrator."))
+    frappe.msgprint("No folder defined for this Form! Please contact the System Administrator.")
 
 def create_year_folder(name, parent_entity):
     name = name[-10:][:4]
